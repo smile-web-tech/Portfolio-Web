@@ -7,11 +7,6 @@
 ![PHP](https://img.shields.io/badge/PHP-777BB4?style=for-the-badge&logo=php&logoColor=white)
 
 A comprehensive, fully responsive personal portfolio website migrated from vanilla HTML/JS to a modern **React + Vite** architecture. This project showcases my work in Full-Stack development, featuring advanced animations and a custom-built visitor tracking system.
-
-## 🖼️ Preview
-
-![Portfolio Preview](public/pictures/smile-web.webp)
-
 ## ✨ Key Features
 
 * **⚛️ Modern Architecture:** Built with React 18 and Vite for blazing fast performance.
