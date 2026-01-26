@@ -6,7 +6,6 @@ import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
 import SplitType from 'split-type'; 
 import './App.css'
 
-// Register GSAP plugins
 gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 
 function App() {
@@ -59,14 +58,11 @@ function App() {
     alert("download started!");
   }
 
-  // --- MAIN ANIMATION & LOGIC ---
   useGSAP(() => {
     
-    // 1. Force Refresh on Load
     const handleLoad = () => ScrollTrigger.refresh();
     window.addEventListener('load', handleLoad);
 
-    // 2. HERO TEXT SPLIT ANIMATION
     const splitText = new SplitType('.split', { types: 'chars' });
     const heroTl = gsap.timeline({ defaults: { ease: 'power3.out' } });
     heroTl
@@ -76,20 +72,17 @@ function App() {
       .from('.hero-image-wrap', { scale: 0.5, opacity: 0, duration: 1, ease: 'back.out(1.7)' }, '-=0.7')
       .from('.forwardButtonsLeft, .forwardButtonsBottom', { opacity: 0, duration: 1 }, '-=0.5');
 
-    // 3. NAVBAR SCROLL EFFECT
     ScrollTrigger.create({
       start: 'top -50',
       end: 99999,
       toggleClass: { className: 'scrolled', targets: '.navbar' }
     });
 
-    // 4. VISITOR COUNTER LOGIC (FIXED)
     const fetchCount = async () => {
       try {
         const counterElement = container.current.querySelector('#view-count');
         const hasVisited = localStorage.getItem('hasVisited_portfolio');
         
-        // Use read mode if they have visited before, otherwise count them
         let apiUrl = hasVisited 
           ? 'https://iospo.org/get_data.php?mode=read'
           : 'https://iospo.org/get_data.php';
@@ -99,10 +92,9 @@ function App() {
         
         const data = await response.json();
         
-        // Safety check: Ensure we have a valid number
         const visitCount = data.visits ? parseInt(data.visits) : 0;
 
-        // GSAP Animation: Count from 0 to visitCount
+
         const proxy = { value: 0 }; 
         gsap.to(proxy, {
           value: visitCount, 
@@ -114,8 +106,6 @@ function App() {
             }
           }
         });
-
-        // Save visit status so we don't count them twice on refresh
         if (!hasVisited) {
           localStorage.setItem('hasVisited_portfolio', 'true');
         }
@@ -126,9 +116,9 @@ function App() {
         if(el) el.innerText = "---";
       }
     };
-    fetchCount(); // Run the function
+    fetchCount(); 
 
-    // 5. GENERAL FADE-INS
+
     const groups = gsap.utils.toArray('.skillGroup, .workGroup');
     groups.forEach(group => {
       gsap.from(group, {
@@ -143,7 +133,7 @@ function App() {
       });
     });
 
-    // 6. PROJECT CARDS
+
     const cards = gsap.utils.toArray('.card, .exp-card');
     cards.forEach((card, i) => {
       gsap.from(card, {
@@ -161,7 +151,6 @@ function App() {
       card.addEventListener('mouseleave', () => gsap.to(card, { scale: 1, duration: 0.3 }));
     });
 
-    // 7. ACTIVE LINK & FORWARD BUTTON LOGIC
     const sections = gsap.utils.toArray('section');
     const navLinks = gsap.utils.toArray('.nav-links a');
     const forwardBtns = gsap.utils.toArray('.forwardBtn');
@@ -191,12 +180,10 @@ function App() {
     };
 
   }, { scope: container });
-  // --- SMOOTH SCROLL HANDLER ---
   const handleScrollTo = (e, id) => {
     e.preventDefault();
-    setIsMenuOpen(false); // Close mobile menu
+    setIsMenuOpen(false);
     
-    // Use GSAP ScrollToPlugin for smooth scrolling
     gsap.to(window, {
       duration: 1,
       scrollTo: { y: id, offsetY: 0 },
@@ -433,6 +420,26 @@ function App() {
               <ul className="workResponsibilities">
                 <li><strong className="highlight">Developed </strong>and <strong className="highlight">launched </strong>a mobile application using <strong className="highlight">Java (Android Studio) </strong>, integrating all <strong className="highlight">website features </strong>, connected to <strong className="highlight">Firebase </strong>, and successfully published it on the <strong className="highlight">Google Play Store </strong>.</li>
                 <li>Designed and optimized the <strong className="highlight">MySQL</strong> database for the web platform, and used <strong className="highlight" >Firebase </strong>for managing real-time data in the <strong className="highlight" >mobile app.</strong></li>
+              </ul>
+            </div>
+          </div>
+          <br />
+          <br />
+          <img src="icons/elite.png" alt="EliteGroup" className="companyLogo" style={{ height: '5rem' }} />
+          <h3 className="workCompany">Freelance IT & Cybersecurity services</h3>
+          <span className="workLocation">Balkanabat, Turkmenistan</span>
+          <div className="role">
+            <h4 className="workTitle">Self employed</h4>
+            <span className="workDate">Mar. 2022 - Aug. 2025</span>
+            <br />
+            <br />
+            <div className="project">
+              <a href="https://iospo.org" target="_blank" className="projectLink"><h4 className="workTitle">IOSPO Student & Admin Portal Website</h4></a>
+              <ul className="workResponsibilities">
+                <li><strong className="highlight">Hosted and managed </strong> a virtual private server on <strong className="highlight">Ubuntu (Linux)</strong>, deploying custom scripts and VPN solutions
+                to <strong className="highlight">bypass censorship and enhance privacy for 200+ clients. </strong></li>
+                <li>Oversaw server maintenance, <strong className="highlight">security protocols </strong>, and troubleshooting in a <strong className="highlight">Linux environment.</strong></li>
+                <li><strong className="highlight">Collaborated with an international remote team </strong> to optimize service performance and scalability</li>
               </ul>
             </div>
           </div>
