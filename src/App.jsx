@@ -434,7 +434,6 @@ function App() {
             <br />
             <br />
             <div className="project">
-              <a href="https://iospo.org" target="_blank" className="projectLink"><h4 className="workTitle">IOSPO Student & Admin Portal Website</h4></a>
               <ul className="workResponsibilities">
                 <li><strong className="highlight">Hosted and managed </strong> a virtual private server on <strong className="highlight">Ubuntu (Linux)</strong>, deploying custom scripts and VPN solutions
                 to <strong className="highlight">bypass censorship and enhance privacy for 200+ clients. </strong></li>
