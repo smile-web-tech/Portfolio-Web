@@ -5,10 +5,45 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
 import SplitType from 'split-type'; 
 import './App.css'
+import emailjs from '@emailjs/browser';
 
 gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 
 function App() {
+  const form = useRef();
+  const [isSending, setIsSending] = useState(false);
+  const sendEmail = (e) => {
+    e.preventDefault();
+    setIsSending(true);
+
+    const sendNotification = emailjs.sendForm(
+      'service_lxc7lgz',   
+      'template_paqo4po',  
+      form.current,
+      { publicKey: 'dsT2_ewnev732Wlvl' }
+    );
+
+    const sendAutoReply = emailjs.sendForm(
+      'service_lxc7lgz',      
+      'template_je0qlh8',
+      form.current,
+      { publicKey: 'dsT2_ewnev732Wlvl' }
+    );
+
+    Promise.all([sendNotification, sendAutoReply])
+      .then(
+        () => {
+          alert('Message sent successfully!');
+          setIsSending(false);
+          e.target.reset();
+        },
+        (error) => {
+          console.error('FAILED...', error.text);
+          alert('Failed to send message. Please try again.');
+          setIsSending(false);
+        }
+      );
+  };
   const fetchCount = async () => {
     try {
       const counterElement = document.getElementById('view-count');
@@ -617,21 +652,45 @@ function App() {
       </section>
 
       <section id="contact" className="section-contact contact section">
-        <div className="container contact-inner">
-          <div className="contact-info flex">
-            <div className="contact-title">
-              <h2>SEND ME AN EMAIL</h2>
-            </div>
-            <div className="contact-forms">
-              <form>
-                <input type="email" placeholder="Your Email" required />
-                <textarea rows="4" placeholder="Your Message" required></textarea>
-                <button type="submit">Send</button>
-              </form>
-            </div>
-          </div>
-        </div>
-      </section>
+  <div className="container contact-inner">
+    <div className="contact-info flex">
+      <div className="contact-title">
+        <h2>SEND ME AN EMAIL</h2>
+      </div>
+      <div className="contact-forms">
+        
+        {/* Added ref and onSubmit */}
+        <form ref={form} onSubmit={sendEmail}>
+          <input 
+            type="email" 
+            name="user_email"
+            placeholder="Your Email" 
+            required 
+          />
+                    <input 
+            type="name" 
+            name="name"
+            placeholder="Your name" 
+            required 
+          />
+          <textarea 
+            rows="4" 
+            name="message" 
+            placeholder="Your Message" 
+            required
+          ></textarea>
+
+          
+          <button type="submit" disabled={isSending}>
+            {isSending ? 'Sending...' : 'Send'}
+          </button>
+          
+        </form>
+        
+      </div>
+    </div>
+  </div>
+</section>
 
       <section id="footer">
         <div className="footer-container">
