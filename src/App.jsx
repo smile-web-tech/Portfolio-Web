@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -6,6 +6,7 @@ import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
 import SplitType from 'split-type'; 
 import './App.css'
 import emailjs from '@emailjs/browser';
+import CustomCursor from './CustomCursor';
 
 gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 
@@ -228,6 +229,7 @@ function App() {
 
   return (
     <div ref={container}>
+      <CustomCursor />
       <nav className="navbar" id="navbar">
         <div className="container">
           <a href="#home" className="logo" onClick={(e) => handleScrollTo(e, '#home')}>Ysmayyl</a>
@@ -253,6 +255,7 @@ function App() {
           </ul>
         </div>
       </nav>
+
 
       {/* Added ID 'home' and className 'section' */}
       <section id="home" className="section"> 
