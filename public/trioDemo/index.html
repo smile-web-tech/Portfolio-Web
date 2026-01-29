@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TRIOWEB | The 3D Web Agency</title>
+    
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700&family=Playfair+Display:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- CORE VARIABLES --- */
+        :root {
+            --bg-color: #050505;
+            --text-color: #e0e0e0;
+            --accent-primary: #7000ff;
+            --accent-secondary: #00f0ff;
+            --glass-bg: rgba(20, 20, 20, 0.4); /* More transparent for 3D visibility */
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --font-main: 'Outfit', sans-serif;
+            --font-serif: 'Playfair Display', serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: var(--font-main);
+            overflow-x: hidden;
+        }
+
+        /* --- THE 3D CANVAS (Fixed Background) --- */
+        #webgl-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            z-index: -1; /* Behind everything */
+            pointer-events: none; /* Let clicks pass through */
+        }
+
+        /* --- NAVIGATION --- */
+        nav {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 1.5rem 5%; position: fixed; width: 100%; z-index: 100;
+            backdrop-filter: blur(5px); border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .logo { font-size: 1.5rem; font-weight: 700; text-transform: uppercase; color: #fff; }
+
+        /* --- SECTIONS --- */
+        section {
+            min-height: 100vh;
+            padding: 0 10%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+        }
+
+        /* Hero */
+        #hero h1 {
+            font-family: var(--font-serif); font-size: 6rem; line-height: 1; margin-bottom: 2rem;
+            mix-blend-mode: overlay; /* Cool effect over the 3D model */
+        }
+        #hero p { font-size: 1.2rem; max-width: 500px; color: #aaa; }
+
+        /* Showcase (Model Viewer) */
+        #showcase { align-items: flex-end; /* Push content to right so 3D BG is on left */ }
+        .viewer-card {
+            width: 100%; max-width: 600px; height: 500px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            position: relative;
+        }
+        model-viewer { width: 100%; height: 100%; }
+
+        /* Services Grid */
+        #services h2 { font-size: 4rem; font-family: var(--font-serif); margin-bottom: 50px; }
+        .grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;
+            width: 100%;
+        }
+        .card {
+            background: var(--glass-bg); border: 1px solid var(--glass-border);
+            padding: 3rem; border-radius: 20px; backdrop-filter: blur(10px);
+            transition: transform 0.3s;
+        }
+        .card:hover { transform: translateY(-10px); background: rgba(255,255,255,0.05); }
+
+        /* Marquee */
+        .marquee {
+            padding: 100px 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(5px);
+            border-top: 1px solid var(--glass-border); border-bottom: 1px solid var(--glass-border);
+        }
+        .track { display: flex; gap: 50px; animation: scroll 20s linear infinite; }
+        .item { font-size: 4rem; font-family: var(--font-serif); opacity: 0.3; white-space: nowrap; }
+        @keyframes scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+        /* Mobile */
+        @media (max-width: 768px) {
+            #hero h1 { font-size: 3.5rem; }
+            section { padding: 100px 5%; }
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="webgl-container"></canvas>
+
+    <nav>
+        <div class="logo">TRIOWEB</div>
+        <div style="color: #aaa; font-size: 0.9rem;">SCROLL DOWN</div>
+    </nav>
+
+    <section id="hero">
+        <p style="color: var(--accent-secondary); letter-spacing: 2px;">DIGITAL & 3D STUDIO</p>
+        <h1>Reality<br>reimagined.</h1>
+        <p>We combine 3ds Max fidelity with high-performance web engineering.</p>
+    </section>
+
+    <section id="showcase">
+        <div style="margin-bottom: 20px; text-align: right; width: 100%; max-width: 600px;">
+            <h2 style="font-size: 2rem; margin-bottom: 10px;">Interactive Products</h2>
+            <p style="color: #aaa;">Users can inspect your 3D models directly in the browser.</p>
+        </div>
+        <div class="viewer-card">
+            <model-viewer 
+                src="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/SheenChair/glTF-Binary/SheenChair.glb" 
+                camera-controls 
+                auto-rotate 
+                shadow-intensity="1"
+                ar>
+            </model-viewer>
+        </div>
+    </section>
+
+    <div class="marquee">
+        <div class="track">
+            <div class="item">3DS MAX</div><div class="item">THREE.JS</div><div class="item">REACT</div>
+            <div class="item">WEBGL</div><div class="item">GSAP</div><div class="item">FLUTTER</div>
+            <div class="item">3DS MAX</div><div class="item">THREE.JS</div><div class="item">REACT</div>
+            <div class="item">WEBGL</div><div class="item">GSAP</div><div class="item">FLUTTER</div>
+        </div>
+    </div>
+
+    <section id="services">
+        <h2>Our Craft</h2>
+        <div class="grid">
+            <div class="card">
+                <h3 style="color: var(--accent-secondary);">01. Model</h3>
+                <p style="margin-top: 15px; color: #ccc;">High-poly 3ds Max modeling and texture baking.</p>
+            </div>
+            <div class="card">
+                <h3 style="color: var(--accent-primary);">02. Optimize</h3>
+                <p style="margin-top: 15px; color: #ccc;">glTF conversion and Draco compression for web speed.</p>
+            </div>
+            <div class="card">
+                <h3 style="color: #fff;">03. Develop</h3>
+                <p style="margin-top: 15px; color: #ccc;">Fullstack implementation with React and Animations.</p>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // --- THREE.JS SETUP (The 3D Object) ---
+        const canvas = document.querySelector('#webgl-container');
+        const scene = new THREE.Scene();
+        
+        // Camera setup
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.z = 5;
+
+        // Renderer setup
+        const renderer = new THREE.WebGLRenderer({
+            canvas: canvas,
+            alpha: true, // Transparent background
+            antialias: true
+        });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+        // Create the Object (A Complex Torus Knot)
+        const geometry = new THREE.TorusKnotGeometry(1.2, 0.4, 100, 16);
+        // Wireframe Material (looks like a blueprint)
+        const material = new THREE.MeshBasicMaterial({ 
+            color: 0x7000ff, // Electric Violet
+            wireframe: true,
+            transparent: true,
+            opacity: 0.3
+        });
+        const mesh = new THREE.Mesh(geometry, material);
+        scene.add(mesh);
+
+        // Add some lights (even though BasicMaterial doesn't need them, good for future updates)
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+        scene.add(ambientLight);
+
+        // Animation Loop (Keeps it spinning slowly)
+        const clock = new THREE.Clock();
+        function animate() {
+            const time = clock.getElapsedTime();
+            // Constant subtle movement
+            mesh.rotation.y += 0.002;
+            renderer.render(scene, camera);
+            requestAnimationFrame(animate);
+        }
+        animate();
+
+        // Handle Resize
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        // --- GSAP SCROLLTRIGGER (The Magic) ---
+        gsap.registerPlugin(ScrollTrigger);
+
+        // 1. Hero Section Animation
+        // The object sits in the center
+        
+        // 2. Scroll into Showcase Section
+        // Move object to Left, Rotate it heavily, Change Color to Cyan
+        gsap.to(mesh.position, {
+            scrollTrigger: {
+                trigger: "#showcase",
+                start: "top bottom",
+                end: "center center",
+                scrub: 1
+            },
+            x: -2.5, // Move left so content can be on right
+            z: 1     // Come closer
+        });
+        
+        gsap.to(mesh.rotation, {
+            scrollTrigger: {
+                trigger: "#showcase",
+                start: "top bottom",
+                end: "bottom top",
+                scrub: 1
+            },
+            x: Math.PI * 2, // Full rotation
+            y: Math.PI 
+        });
+
+        gsap.to(material.color, {
+            scrollTrigger: {
+                trigger: "#showcase",
+                start: "top bottom",
+                end: "center center",
+                scrub: 1
+            },
+            r: 0, g: 240/255, b: 255/255 // Change to Cyan (RGB normalized)
+        });
+
+        // 3. Scroll into Services Section
+        // Move object to Right, Zoom out, Change color back to Violet
+        gsap.to(mesh.position, {
+            scrollTrigger: {
+                trigger: "#services",
+                start: "top bottom",
+                end: "center center",
+                scrub: 1
+            },
+            x: 2.5, // Move Right
+            z: -2   // Zoom out
+        });
+
+        gsap.to(material.color, {
+            scrollTrigger: {
+                trigger: "#services",
+                start: "top bottom",
+                end: "center center",
+                scrub: 1
+            },
+            r: 112/255, g: 0, b: 255/255 // Back to Violet
+        });
+
+    </script>
+</body>
+</html>
