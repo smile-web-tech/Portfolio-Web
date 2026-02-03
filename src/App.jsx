@@ -496,7 +496,7 @@ function App() {
             <div className="card">
               <div className="external-links">
                 <div className="WhatsAppIcon">
-                  <a href="https://wa.me/36205021561" target="_blank">
+                  <a href="https://wa.me/36205190959" target="_blank">
                     <img src="icons/whatsApp.svg" alt="WhatsApp" style={{ height: '30px', width: '30px' }} />
                   </a>
                 </div>
@@ -523,7 +523,7 @@ function App() {
             <div className="card">
               <div className="external-links">
                 <div className="WhatsAppIcon">
-                  <a href="https://wa.me/36205021561" target="_blank">
+                  <a href="https://wa.me/36205190959" target="_blank">
                     <img src="icons/whatsApp.svg" alt="WhatsApp" style={{ height: '30px', width: '30px' }} />
                   </a>
                 </div>
@@ -546,7 +546,7 @@ function App() {
             <div className="card">
               <div className="external-links">
                 <div className="WhatsAppIcon">
-                  <a href="https://wa.me/36205021561" target="_blank">
+                  <a href="https://wa.me/36205190959" target="_blank">
                     <img src="icons/whatsApp.svg" alt="WhatsApp" style={{ height: '30px', width: '30px' }} />
                   </a>
                 </div>
@@ -572,7 +572,7 @@ function App() {
             <div className="card">
               <div className="external-links">
                 <div className="WhatsAppIcon">
-                  <a href="https://wa.me/36205021561" target="_blank">
+                  <a href="https://wa.me/36205190959" target="_blank">
                     <img src="icons/whatsApp.svg" alt="WhatsApp" style={{ height: '30px', width: '30px' }} />
                   </a>
                 </div>
@@ -600,7 +600,7 @@ function App() {
             <div className="card">
               <div className="external-links">
                 <div className="WhatsAppIcon">
-                  <a href="https://wa.me/36205021561" target="_blank">
+                  <a href="https://wa.me/36205190959" target="_blank">
                     <img src="icons/whatsApp.svg" alt="WhatsApp" style={{ height: '30px', width: '30px' }} />
                   </a>
                 </div>
