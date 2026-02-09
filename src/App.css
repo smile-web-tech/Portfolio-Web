@@ -122,7 +122,10 @@ body{font-family: 'Advent Pro'; background:var(--dark);color:var(--light);overfl
 
 /* ... (Keep the rest of your original CSS here exactly as it was) ... */
 /* Make sure to copy the rest of your original CSS from your first message here */
-
+.technologies{
+  display: flex;
+  justify-content: space-around;
+}
 .container{max-width:1200px;margin:0 auto;padding:1.5rem; width: 100%;}
 .section{position:relative;overflow:hidden;padding: 5rem 0 5rem 0;}
 .wave-bg{position:absolute;top:0;left:0;width:200%;height:200%;background:radial-gradient(circle at 50% -20%,rgba(255,255,255,0.08),transparent 70%);filter:blur(80px);transform:translate(-25%,-25%);z-index:1;}
@@ -279,7 +282,7 @@ a{transition: color 0.3s ease;}
   .hamburger.activate .bar:nth-child(1) {transform: translateY(9px) rotate(45deg);}
   .hamburger.activate .bar:nth-child(3) {transform: translateY(-9px) rotate(-45deg);}
   .hero-image-wrap img{width: 300px;height: 300px;}
-  .flex{display: block;}
+
   .contact-info button{width: 100%;}
   .contact-info form{display: block;}
   .about-inner, .contact-inner{flex-direction:column;}

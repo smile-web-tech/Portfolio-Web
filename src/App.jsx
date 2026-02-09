@@ -510,7 +510,7 @@ function App() {
                 <h3>Gunbatar Education Center Website</h3>
                 <p>Developed a comprehensive and fully functional website for an education center, providing a seamless platform for both teachers and students to interact and access resources.</p>
               </div>
-
+<br />
               <div className="technologies flex">
                 <small>HTML</small>
                 <small>CSS</small>
@@ -537,6 +537,7 @@ function App() {
                 <h3>Gunbatar Education Center Mobile Application</h3>
                 <p>Engineered a robust mobile application from the ground up for the education center using Kotlin and Firebase, enhancing accessibility and engagement for users on Android devices.</p>
               </div>
+              <br />
               <div className="technologies flex">
                 <small>Java</small>
                 <small>FireBase</small>
@@ -560,7 +561,7 @@ function App() {
                 <h3>International Science Olympiad Portal (IOSPO)</h3>
                 <p>Created with team an online portal for the International Science Olympiad, featuring a custom content management system (CMS) to efficiently manage and publish content related to the event.</p>
               </div>
-
+<br />
               <div className="technologies flex">
                 <small>HTML</small>
                 <small>CSS</small>
@@ -586,7 +587,7 @@ function App() {
                 <h3>Comprehensive E-Commerce Platform</h3>
                 <p>Designed and built a fully functional e-commerce website, offering powerful tools for businesses to manage their products, track inventory, and handle client information effectively.</p>
               </div>
-
+<br />
               <div className="technologies flex">
                 <small>HTML</small>
                 <small>CSS</small>
@@ -614,7 +615,7 @@ function App() {
                 <h3>JetFurniture E-Commerce Ecosystem</h3>
                 <p>Designed and developed a complete e-commerce solution featuring a native Android customer application and a responsive React.js admin dashboard. The system ensures real-time inventory synchronization, seamless order processing, and an intuitive shopping experience optimized for modern mobile devices.</p>
               </div>
-
+               <br />
               <div className="technologies flex">
                 <small>Kotlin</small>
                 <small>Jetpack Compose</small>
@@ -624,6 +625,35 @@ function App() {
               </div>
             </div>
 
+
+            <div className="card">
+              <div className="external-links">
+                <div className="WhatsAppIcon">
+                  <a href="https://wa.me/36205190959" target="_blank">
+                    <img src="icons/whatsApp.svg" alt="WhatsApp" style={{ height: '30px', width: '30px' }} />
+                  </a>
+                </div>
+                <div className="GitHubIcon">
+                  <a href="https://github.com/smile-web-tech/JetChatAi" target="_blank"><img src="icons/githubIcon.svg" alt="GitHub" style={{ height: '30px', width: '30px' }} /></a> </div>
+              </div>
+              <a href="https://smiletech.dev/app/JetChat.apk" target="_blank">
+                <img src="pictures/JetTemplateAi.png" alt="eCommerce" />
+              </a>
+              <div className="info">
+                <h3>JetChat: AI-Powered Personal Assistant</h3>
+                <p>
+                Developed a high-performance conversational AI application using Jetpack Compose and the Groq SDK for near-instant Llama 3.1 inference. The system features a custom-built RAG (Retrieval-Augmented Generation) engine that allows the AI to provide context-aware responses based on local knowledge bases.
+
+                </p>
+              </div>
+               <br />
+              <div className="technologies flex">
+                <small>Kotlin</small>
+                <small>Jetpack Compose</small>
+                <small>Firebase</small>
+                <small>RAG & Prompt Engineering</small>
+              </div>
+            </div>
           </div>
         </div>
 
