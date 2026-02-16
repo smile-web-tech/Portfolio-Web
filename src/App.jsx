@@ -406,6 +406,10 @@ function App() {
                 <div className="singleSkill">
                   <img src="data:image/svg+xml,%3c?xml%20version=%271.0%27%20encoding=%27UTF-8%27?%3e%3c!--%20Uploaded%20to:%20SVG%20Repo,%20www.svgrepo.com,%20Generator:%20SVG%20Repo%20Mixer%20Tools%20--%3e%3csvg%20width=%27800px%27%20height=%27800px%27%20viewBox=%27-64%200%20384%20384%27%20version=%271.1%27%20xmlns=%27http://www.w3.org/2000/svg%27%20xmlns:xlink=%27http://www.w3.org/1999/xlink%27%20preserveAspectRatio=%27xMidYMid%27%3e%3cg%3e%3cpath%20d=%27M64,384%20C99.328,384%20128,355.328%20128,320%20L128,256%20L64,256%20C28.672,256%200,284.672%200,320%20C0,355.328%2028.672,384%2064,384%20Z%27%20fill=%27%230ACF83%27%3e%3c/path%3e%3cpath%20d=%27M0,192%20C0,156.672%2028.672,128%2064,128%20L128,128%20L128,256%20L64,256%20C28.672,256%200,227.328%200,192%20Z%27%20fill=%27%23A259FF%27%3e%3c/path%3e%3cpath%20d=%27M0,64%20C0,28.672%2028.672,0%2064,0%20L128,0%20L128,128%20L64,128%20C28.672,128%200,99.328%200,64%20Z%27%20fill=%27%23F24E1E%27%3e%3c/path%3e%3cpath%20d=%27M128,0%20L192,0%20C227.328,0%20256,28.672%20256,64%20C256,99.328%20227.328,128%20192,128%20L128,128%20L128,0%20Z%27%20fill=%27%23FF7262%27%3e%3c/path%3e%3cpath%20d=%27M256,192%20C256,227.328%20227.328,256%20192,256%20C156.672,256%20128,227.328%20128,192%20C128,156.672%20156.672,128%20192,128%20C227.328,128%20256,156.672%20256,192%20Z%27%20fill=%27%231ABCFE%27%3e%3c/path%3e%3c/g%3e%3c/svg%3e" alt="" className="techLogo" />
                   <span>Figma</span></div>
+                <div className="singleSkill">
+                  <img src='https://www.svgrepo.com/show/452192/docker.svg'
+                  style={{width: '82px'}}
+                  ></img> <span>Docker</span></div>
               </div>
             </div>
           </div>
