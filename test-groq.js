@@ -1,5 +1,8 @@
 import Groq from "groq-sdk";
-const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
+const groq = new Groq({
+  apiKey: import.meta.env.VITE_GROQ_API_KEY, // Your Vite env variable
+  dangerouslyAllowBrowser: true // REQUIRED for frontend testing
+});
 async function main() {
     try {
         const chatCompletion = await groq.chat.completions.create({
