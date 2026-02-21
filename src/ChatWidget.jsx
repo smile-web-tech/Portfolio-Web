@@ -1,7 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
+import Groq from "groq-sdk";
+import { PORTFOLIO_CONTEXT } from './portfolioData';
 import './App.css'; // Ensure CSS is imported if not already globally available
+
+const groq = new Groq({ apiKey: import.meta.env.VITE_GROQ_API_KEY, dangerouslyAllowBrowser: true });
 
 const ChatWidget = () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -10,6 +14,7 @@ const ChatWidget = () => {
     ]);
     const [input, setInput] = useState('');
     const [showPrompts, setShowPrompts] = useState(true);
+    const [isTyping, setIsTyping] = useState(false);
     const chatWindowRef = useRef(null);
     const messagesEndRef = useRef(null);
 
@@ -51,16 +56,37 @@ const ChatWidget = () => {
         scrollToBottom();
     }, [messages]);
 
-    const handleSendMessage = (text) => {
+    const handleSendMessage = async (text) => {
         if (!text.trim()) return;
 
-        setMessages(prev => [...prev, { text, sender: 'user' }]);
+        const newMessages = [...messages, { text, sender: 'user' }];
+        setMessages(newMessages);
         setInput('');
         setShowPrompts(false);
+        setIsTyping(true);
 
-        setTimeout(() => {
-            setMessages(prev => [...prev, { text: "Thanks for your message! utilizing Groq AI is coming soon.", sender: 'ai' }]);
-        }, 1000);
+        try {
+            const apiMessages = [
+                { role: 'system', content: `${PORTFOLIO_CONTEXT}\n\nYou are a helpful and professional AI assistant for a developer's portfolio website. Keep responses concise and friendly.` },
+                ...newMessages.map(msg => ({
+                    role: msg.sender === 'user' ? 'user' : 'assistant',
+                    content: msg.text
+                }))
+            ];
+
+            const chatCompletion = await groq.chat.completions.create({
+                messages: apiMessages,
+                model: "llama-3.1-8b-instant",
+            });
+
+            const reply = chatCompletion.choices[0]?.message?.content || "Sorry, I couldn't process that.";
+            setMessages(prev => [...prev, { text: reply, sender: 'ai' }]);
+        } catch (error) {
+            console.error("Groq API error:", error);
+            setMessages(prev => [...prev, { text: `Error: ${error.message || "Unknown error"}. Check console.`, sender: 'ai' }]);
+        } finally {
+            setIsTyping(false);
+        }
     };
 
     const handlePromptClick = (prompt) => {
@@ -85,6 +111,11 @@ const ChatWidget = () => {
                                 {msg.text}
                             </div>
                         ))}
+                        {isTyping && (
+                            <div className="message-bubble ai typing">
+                                <span className="typing-dot"></span><span className="typing-dot"></span><span className="typing-dot"></span>
+                            </div>
+                        )}
                         <div ref={messagesEndRef} />
                     </div>
 
