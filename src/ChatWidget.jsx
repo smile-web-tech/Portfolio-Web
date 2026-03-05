@@ -7,6 +7,58 @@ import './App.css'; // Ensure CSS is imported if not already globally available
 
 const groq = new Groq({ apiKey: import.meta.env.VITE_GROQ_API_KEY, dangerouslyAllowBrowser: true });
 
+// Lightweight markdown-to-HTML formatter for AI responses
+const formatMessage = (text) => {
+    let html = text
+        // Escape HTML entities
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        // Bold: **text**
+        .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+        // Inline code: `text`
+        .replace(/`([^`]+)`/g, '<code>$1</code>')
+        // Links: [text](url)
+        .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>');
+
+    // Process lines for lists and paragraphs
+    const lines = html.split('\n');
+    let result = '';
+    let inUl = false;
+    let inOl = false;
+
+    lines.forEach(line => {
+        const trimmed = line.trim();
+
+        // Numbered list: 1. item
+        if (/^\d+\.\s/.test(trimmed)) {
+            if (!inOl) { result += '<ol>'; inOl = true; }
+            if (inUl) { result += '</ul>'; inUl = false; }
+            result += `<li>${trimmed.replace(/^\d+\.\s/, '')}</li>`;
+        }
+        // Bullet list: - item
+        else if (/^[-•]\s/.test(trimmed)) {
+            if (!inUl) { result += '<ul>'; inUl = true; }
+            if (inOl) { result += '</ol>'; inOl = false; }
+            result += `<li>${trimmed.replace(/^[-•]\s/, '')}</li>`;
+        }
+        else {
+            if (inUl) { result += '</ul>'; inUl = false; }
+            if (inOl) { result += '</ol>'; inOl = false; }
+            if (trimmed === '') {
+                result += '<br/>';
+            } else {
+                result += `<p>${trimmed}</p>`;
+            }
+        }
+    });
+
+    if (inUl) result += '</ul>';
+    if (inOl) result += '</ol>';
+
+    return result;
+};
+
 const ChatWidget = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [messages, setMessages] = useState([
@@ -108,7 +160,10 @@ const ChatWidget = () => {
                     <div className="chat-messages">
                         {messages.map((msg, index) => (
                             <div key={index} className={`message-bubble ${msg.sender}`}>
-                                {msg.text}
+                                {msg.sender === 'ai'
+                                    ? <span dangerouslySetInnerHTML={{ __html: formatMessage(msg.text) }} />
+                                    : msg.text
+                                }
                             </div>
                         ))}
                         {isTyping && (

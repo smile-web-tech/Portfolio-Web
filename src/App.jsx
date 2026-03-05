@@ -5,48 +5,14 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
 import SplitType from 'split-type';
 import './App.css'
-import emailjs from '@emailjs/browser';
 import CustomCursor from './CustomCursor';
+import SectionBackground from './AboutBackground';
 import ChatWidget from './ChatWidget';
 import * as React from "react";
 
 gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 
 function App() {
-  const form = useRef();
-  const [isSending, setIsSending] = useState(false);
-  const sendEmail = (e) => {
-    e.preventDefault();
-    setIsSending(true);
-
-    const sendNotification = emailjs.sendForm(
-      'service_lxc7lgz',
-      'template_paqo4po',
-      form.current,
-      { publicKey: 'dsT2_ewnev732Wlvl' }
-    );
-
-    const sendAutoReply = emailjs.sendForm(
-      'service_lxc7lgz',
-      'template_je0qlh8',
-      form.current,
-      { publicKey: 'dsT2_ewnev732Wlvl' }
-    );
-
-    Promise.all([sendNotification, sendAutoReply])
-      .then(
-        () => {
-          alert('Message sent successfully!');
-          setIsSending(false);
-          e.target.reset();
-        },
-        (error) => {
-          console.error('FAILED...', error.text);
-          alert('Failed to send message. Please try again.');
-          setIsSending(false);
-        }
-      );
-  };
   const fetchCount = async () => {
     try {
       const counterElement = document.getElementById('view-count');
@@ -268,7 +234,7 @@ function App() {
             {/* Added 'split' class for animation */}
             <h1 className="title"><span className="split">YSMAYYL</span> MAMMETGELDIYEV</h1>
             <div className="contact">
-              <a href="#contact" onClick={(e) => handleScrollTo(e, '#contact')}>
+              <a href="mailto:smiletechweb@gmail.com">
                 <button className="contactBtn">Contact me</button>
               </a>
               <br />
@@ -306,6 +272,7 @@ function App() {
 
       {/* Added 'section' class for GSAP targeting */}
       <section id="about" className="section about">
+        <SectionBackground />
         <div className="container about-inner">
           <div className="about-image-wrap">
             <img src="pictures/smile2.webp" alt="Me at work" />
@@ -320,6 +287,7 @@ function App() {
       </section>
 
       <section id="skills" className="skills section ">
+        <SectionBackground variant="right" showOrbs />
         <div className="container">
           <div className="skill-title">
             <h2 >Skills</h2>
@@ -418,6 +386,34 @@ function App() {
         <div className="container projectTitle">
           <h2>Work Experience</h2>
           <div className="workGroup">
+            <img src="pictures/studenthub_logo.png" alt="StudentHub" className="companyLogo" style={{ height: '4rem' }} />
+            <h3 className="workCompany">StudentHub Mobile Application</h3>
+            <span className="workLocation">Budapest, Hungary</span>
+            <div className="role">
+              <h4 className="workTitle">Self-employed</h4>
+              <span className="workDate">Jan. 2026 - Present</span>
+              <br />
+              <br />
+              <div className="project">
+                <ul className="workResponsibilities">
+                  <li><strong className="highlight">Collaborating</strong> with a backend developer to build a <strong className="highlight">full-stack mobile application</strong> using <strong className="highlight">Kotlin (Jetpack Compose)</strong>, <strong className="highlight">.NET 10 / C#</strong> WebAPI, and <strong className="highlight">PostgreSQL</strong>.</li>
+                  <li>Engineering a <strong className="highlight">smart dashboard</strong> with <strong className="highlight">Canvas API</strong> integration for assignment notifications, a <strong className="highlight">schedule management</strong> system, an <strong className="highlight">Explore marketplace</strong>, and <strong className="highlight">secure JWT authentication</strong> with email OTP.</li>
+                  <li>Designing a distinctive <strong className="highlight">Pastel Neo-Brutalist UI</strong> with tactile animations and a curated pastel color palette. <strong className="highlight">Currently under active development.</strong></li>
+                </ul>
+                <div className="dev-progress">
+                  <div className="dev-progress-label">
+                    <span>Development Progress</span>
+                    <span className="dev-progress-status">In Progress</span>
+                  </div>
+                  <div className="dev-progress-track">
+                    <div className="dev-progress-fill"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <br />
+            <br />
             <img src="pictures/iospoLogo.png" alt="IOSPO" className="companyLogo" style={{ height: '4rem' }} />
             <h3 className="workCompany"> International Online Subject and Project Olympiad (IOSPO)</h3>
             <span className="workLocation">Balkanabat, Turkmenistan</span>
@@ -690,48 +686,7 @@ function App() {
         </div>
       </section>
 
-      <section id="contact" className="section-contact contact section">
-        <div className="container contact-inner">
-          <div className="contact-info flex">
-            <div className="contact-title">
-              <h2>SEND ME AN EMAIL</h2>
-            </div>
-            <div className="contact-forms">
-
-              {/* Added ref and onSubmit */}
-              <form ref={form} onSubmit={sendEmail}>
-                <input
-                  type="email"
-                  name="user_email"
-                  placeholder="Your Email"
-                  required
-                />
-                <input
-                  type="name"
-                  name="name"
-                  placeholder="Your name"
-                  required
-                />
-                <textarea
-                  rows="4"
-                  name="message"
-                  placeholder="Your Message"
-                  required
-                ></textarea>
-
-
-                <button type="submit" disabled={isSending}>
-                  {isSending ? 'Sending...' : 'Send'}
-                </button>
-
-              </form>
-
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section id="footer">
+      <section id="contact">
         <div className="footer-container">
           <div className="hero-image-wrap-footer">
             <div className="image-layer-footer">
@@ -758,7 +713,7 @@ function App() {
                     d="M13.6,8.5L9.5,4.3C9,3.9,8.3,3.9,7.8,4.3L4.7,7.5 C4,8.1,3.8,9.1,4.1,9.9c0.8,2.3,2.9,6.9,7,11s8.7,6.1,11,7c0.9,0.3,1.8,0.1,2.5-0.5l3.1-3.1c0.5-0.5,0.5-1.2,0-1.7l-4.1-4.1 c-0.5-0.5-1.2-0.5-1.7,0l-2.5,2.5c0,0-2.8-1.2-5-3.3s-3.3-5-3.3-5l2.5-2.5C14.1,9.7,14.1,8.9,13.6,8.5z"
                   />
                 </svg></div>+36 20 519 0959</a>
-            <a href="https://www.linkedin.com/in/ysmayyl-mammetgeldiyev-31b5b5383/" target="_blank"><div className="linkedin"><svg stroke="currentColor" fill="currentColor" strokeWidth="0" viewBox="0 0 1024 1024" className="icon" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M880 112H144c-17.7 0-32 14.3-32 32v736c0 17.7 14.3 32 32 32h736c17.7 0 32-14.3 32-32V144c0-17.7-14.3-32-32-32zM349.3 793.7H230.6V411.9h118.7v381.8zm-59.3-434a68.8 68.8 0 1 1 68.8-68.8c-.1 38-30.9 68.8-68.8 68.8zm503.7 434H675.1V608c0-44.3-.8-101.2-61.7-101.2-61.7 0-71.2 48.2-71.2 98v188.9H423.7V411.9h113.8v52.2h1.6c15.8-30 54.5-61.7 112.3-61.7 120.2 0 142.3 79.1 142.3 181.9v209.4z"></path></svg></div> LinkedIn</a>
+            <a href="https://linkedin.com/in/ysmayyldev" target="_blank"><div className="linkedin"><svg stroke="currentColor" fill="currentColor" strokeWidth="0" viewBox="0 0 1024 1024" className="icon" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M880 112H144c-17.7 0-32 14.3-32 32v736c0 17.7 14.3 32 32 32h736c17.7 0 32-14.3 32-32V144c0-17.7-14.3-32-32-32zM349.3 793.7H230.6V411.9h118.7v381.8zm-59.3-434a68.8 68.8 0 1 1 68.8-68.8c-.1 38-30.9 68.8-68.8 68.8zm503.7 434H675.1V608c0-44.3-.8-101.2-61.7-101.2-61.7 0-71.2 48.2-71.2 98v188.9H423.7V411.9h113.8v52.2h1.6c15.8-30 54.5-61.7 112.3-61.7 120.2 0 142.3 79.1 142.3 181.9v209.4z"></path></svg></div> linkedin.com/in/ysmayyldev</a>
             <a href="mailto:smiletechweb@gmail.com"><div className="mail"><svg width="24px" height="24px" viewBox="0 0 192 192" xmlns="http://www.w3.org/2000/svg" stroke="currentColor" fill="currentColor"><path strokeLinejoin="round" strokeWidth="12" d="M22 57.265V142c0 5.523 4.477 10 10 10h24V95.056l40 30.278 40-30.278V152h24c5.523 0 10-4.477 10-10V57.265c0-13.233-15.15-20.746-25.684-12.736L96 81.265 47.684 44.53C37.15 36.519 22 44.032 22 57.265Z" /></svg></div> smiletechweb@gmail.com</a>
             <div className="counter-wrapper">
               <div className="counter-icon">
