@@ -279,7 +279,7 @@ function App() {
           </div>
           <div className="about-text">
             <h2 className="subtitle">About Me</h2>
-            <p>Motivated and detail-oriented IT enthusiast with strong skills in software development, system administration, and web technologies.
+            <p>Motivated and detail-oriented Software Engineer with strong skills in software development, system administration, and web technologies.
               I enjoy taking on challenges, building efficient solutions, and bringing both technical precision and creativity to every project. Whether it’s developing applications, managing IT systems, or collaborating with a team, I aim to deliver reliable, high-quality results.
             </p>
           </div>
@@ -493,9 +493,9 @@ function App() {
           <div className="project-cards">
             <div className="card">
               <div className="external-links">
-                <div className="WhatsAppIcon">
-                  <a href="https://wa.me/36205190959" target="_blank">
-                    <img src="icons/whatsApp.svg" alt="WhatsApp" style={{ height: '30px', width: '30px' }} />
+                <div className="LiveDemoBtn">
+                  <a href="https://peachpuff-marten-860555.hostingersite.com/" target="_blank" className="contactBtn" style={{ padding: '0.2rem 0.6rem', height: 'auto', fontSize: '0.8rem', color: '#fff', textDecoration: 'none' }}>
+                    Live Demo
                   </a>
                 </div>
                 <div className="GitHubIcon">
@@ -520,9 +520,9 @@ function App() {
             </div>
             <div className="card">
               <div className="external-links">
-                <div className="WhatsAppIcon">
-                  <a href="https://wa.me/36205190959" target="_blank">
-                    <img src="icons/whatsApp.svg" alt="WhatsApp" style={{ height: '30px', width: '30px' }} />
+                <div className="LiveDemoBtn">
+                  <a href="https://play.google.com/store/apps/details?id=com.gunbatarshapagy.west_project&hl=en" target="_blank" className="contactBtn" style={{ padding: '0.2rem 0.6rem', height: 'auto', fontSize: '0.8rem', color: '#fff', textDecoration: 'none' }}>
+                    Live Demo
                   </a>
                 </div>
                 <div className="GitHubIcon">
@@ -544,9 +544,9 @@ function App() {
             </div>
             <div className="card">
               <div className="external-links">
-                <div className="WhatsAppIcon">
-                  <a href="https://wa.me/36205190959" target="_blank">
-                    <img src="icons/whatsApp.svg" alt="WhatsApp" style={{ height: '30px', width: '30px' }} />
+                <div className="LiveDemoBtn">
+                  <a href="https://iospo.org" target="_blank" className="contactBtn" style={{ padding: '0.2rem 0.6rem', height: 'auto', fontSize: '0.8rem', color: '#fff', textDecoration: 'none' }}>
+                    Visit Site
                   </a>
                 </div>
                 <div className="GitHubIcon">
@@ -570,9 +570,9 @@ function App() {
             </div>
             <div className="card">
               <div className="external-links">
-                <div className="WhatsAppIcon">
-                  <a href="https://wa.me/36205190959" target="_blank">
-                    <img src="icons/whatsApp.svg" alt="WhatsApp" style={{ height: '30px', width: '30px' }} />
+                <div className="LiveDemoBtn">
+                  <a href="https://peachpuff-marten-860555.hostingersite.com/korpe" target="_blank" className="contactBtn" style={{ padding: '0.2rem 0.6rem', height: 'auto', fontSize: '0.8rem', color: '#fff', textDecoration: 'none' }}>
+                    Live Demo
                   </a>
                 </div>
                 <div className="GitHubIcon">
@@ -598,9 +598,9 @@ function App() {
 
             <div className="card">
               <div className="external-links">
-                <div className="WhatsAppIcon">
-                  <a href="https://wa.me/36205190959" target="_blank">
-                    <img src="icons/whatsApp.svg" alt="WhatsApp" style={{ height: '30px', width: '30px' }} />
+                <div className="LiveDemoBtn">
+                  <a href="https://smiletech.dev/app/JetFurniture.apk" target="_blank" className="contactBtn" style={{ padding: '0.2rem 0.6rem', height: 'auto', fontSize: '0.8rem', color: '#fff', textDecoration: 'none' }}>
+                    Live Demo
                   </a>
                 </div>
                 <div className="GitHubIcon">
@@ -626,9 +626,9 @@ function App() {
 
             <div className="card">
               <div className="external-links">
-                <div className="WhatsAppIcon">
-                  <a href="https://wa.me/36205190959" target="_blank">
-                    <img src="icons/whatsApp.svg" alt="WhatsApp" style={{ height: '30px', width: '30px' }} />
+                <div className="LiveDemoBtn">
+                  <a href="https://smiletech.dev/app/JetChat.apk" target="_blank" className="contactBtn" style={{ padding: '0.2rem 0.6rem', height: 'auto', fontSize: '0.8rem', color: '#fff', textDecoration: 'none' }}>
+                    Live Demo
                   </a>
                 </div>
                 <div className="GitHubIcon">
@@ -676,7 +676,7 @@ function App() {
               <img src="pictures/logo.png" alt="GunbatarShapagy Logo" />
               <div className="details">
                 <h3>"Gunbatar Shapagy" education center</h3>
-                <p>Completed Web Development course inlucding DB</p>
+                <p>Completed Web Development course including DB</p>
                 <p>Completed Python & Java course</p>
                 <p>Mastered in Android app development</p>
                 <span className="educationDate">Mar 2021 — Feb 2025</span>

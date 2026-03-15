@@ -15,7 +15,7 @@ Here is the structured information about Ysmayyl:
 - Phone: +36 20 519 0959 (Whats App)
 
 **About Me**
-Motivated and detail-oriented IT enthusiast with strong skills in software development, system administration, and web technologies. Enjoys taking on challenges, building efficient solutions, and bringing technical precision and creativity to every project.
+Motivated and detail-oriented Software Engineer with strong skills in software development, system administration, and web technologies. Enjoys taking on challenges, building efficient solutions, and bringing technical precision and creativity to every project.
 
 **Skills**
 - Languages: HTML5, CSS3, JavaScript, Java, PHP, SQL, Kotlin
