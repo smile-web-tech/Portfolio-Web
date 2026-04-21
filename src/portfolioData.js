@@ -37,13 +37,15 @@ When asked what Ysmayyl is currently working on, always mention **StudentHub** w
 4. Self-Employed IT & Cybersecurity Services (Mar 2022 - Aug 2025). Hosted/managed Linux servers, deployed custom VPNs to bypass censorship, and worked with an international remote team.
 
 **Projects**
-1. StudentHub — Cross-Platform Student Companion App (Kotlin, Jetpack Compose, .NET 10, PostgreSQL) — Currently in development
-2. Gunbatar Education Center Website (HTML, CSS, JS, PHP, Laravel, SQL)
-3. Gunbatar Education Center Mobile App (Java, Firebase, Android Studio)
-4. IOSPO Portal (HTML, CSS, JS, PHP, MySQL)
-5. Comprehensive E-Commerce Platform (HTML, CSS, JS, PHP, Bootstrap5, MySQL)
-6. JetFurniture E-Commerce Ecosystem (Kotlin, Jetpack Compose, React.js, Firebase)
-7. JetChat AI-Powered Personal Assistant (Kotlin, Jetpack Compose, Firebase, RAG, LLaMA 3.1)
+1. AeroClaim Autopilot — Fully Autonomous, Voice-Native EU261 Aviation Compensation AI Agent (React 18, .NET 10, Groq/Llama 3.3, ElevenLabs, SQL) — **GDG Hackathon Winner**
+2. StudentHub — Cross-Platform Student Companion App (Kotlin, Jetpack Compose, .NET 10, PostgreSQL) — Currently in development
+3. Gunbatar Education Center Website (HTML, CSS, JS, PHP, Laravel, SQL)
+4. Gunbatar Education Center Mobile App (Java, Firebase, Android Studio)
+5. IOSPO Portal (HTML, CSS, JS, PHP, MySQL)
+6. Comprehensive E-Commerce Platform (HTML, CSS, JS, PHP, Bootstrap5, MySQL)
+7. JetFurniture E-Commerce Ecosystem (Kotlin, Jetpack Compose, React.js, Firebase)
+8. JetChat AI-Powered Personal Assistant (Kotlin, Jetpack Compose, Firebase, RAG, LLaMA 3.1)
+
 
 **Education**
 - Eötvös Loránd University (ELTE) - Budapest, Hungary: BSc in Computer Science (Sep 2025 - Present)

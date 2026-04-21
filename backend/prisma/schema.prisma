@@ -1,0 +1,80 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model GeneralSettings {
+  id               Int     @id @default(1)
+  name             String
+  jobTitle         String
+  bio              String?
+  profilePicUrl    String?
+  resumeUrl        String?
+  githubUrl        String?
+  linkedinUrl      String?
+  twitterUrl       String?
+  email            String?
+}
+
+model Project {
+  id             String   @id @default(uuid())
+  title          String
+  description    String
+  techStack      String[] // Array of strings for tags
+  liveDemoUrl    String?
+  githubRepoUrl  String?
+  thumbnailUrl   String?
+  isFeatured     Boolean  @default(false)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+model Experience {
+  id          String   @id @default(uuid())
+  company     String
+  role        String
+  startDate   DateTime
+  endDate     DateTime? // Null means "Present"
+  description String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Education {
+  id          String   @id @default(uuid())
+  institution String
+  degree      String
+  startDate   DateTime
+  endDate     DateTime? // Null means until present or dropping out
+  gpa         String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Skill {
+  id          String   @id @default(uuid())
+  category    String   // e.g., "Frontend", "Backend"
+  name        String
+  proficiency String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model CustomSection {
+  id        String   @id @default(uuid())
+  title     String
+  content   String   // Markdown body
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String   // Hashed
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
