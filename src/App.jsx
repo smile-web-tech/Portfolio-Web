@@ -506,9 +506,9 @@ function App() {
             <div className="card">
               <div className="external-links">
                 <div className="LiveDemoBtn">
-                  <div className="contactBtn" style={{ padding: '0.2rem 0.6rem', height: 'auto', fontSize: '0.8rem', color: '#fff', textDecoration: 'none', background: '#ff7000' }}>
+                  <a href="https://aero-claim-auto-pilot.vercel.app/#" target="_blank" className="contactBtn" style={{ padding: '0.2rem 0.6rem', height: 'auto', fontSize: '0.8rem', color: '#fff', textDecoration: 'none', background: '#ff7000' }}>
                     Hackathon Winner
-                  </div>
+                  </a>
                 </div>
                 <div className="GitHubIcon">
                   <a href="https://github.com/smile-web-tech/AeroClaimAuto" target="_blank"><img src="icons/githubIcon.svg" alt="GitHub" style={{ height: '30px', width: '30px' }} /> </a> </div>
@@ -559,15 +559,10 @@ function App() {
             </div>
             <div className="card">
               <div className="external-links">
-                <div className="LiveDemoBtn">
-                  <a href="https://play.google.com/store/apps/details?id=com.gunbatarshapagy.west_project&hl=en" target="_blank" className="contactBtn" style={{ padding: '0.2rem 0.6rem', height: 'auto', fontSize: '0.8rem', color: '#fff', textDecoration: 'none' }}>
-                    Live Demo
-                  </a>
-                </div>
                 <div className="GitHubIcon">
                   <a href="https://github.com/smile-web-tech/gunbatar-app" target="_blank"><img src="icons/githubIcon.svg" alt="GitHub" style={{ height: '30px', width: '30px' }} /></a> </div>
               </div>
-              <a href="https://play.google.com/store/apps/details?id=com.gunbatarshapagy.west_project&hl=en" target="_blank">
+              <a href="https://github.com/smile-web-tech/gunbatar-app" target="_blank">
                 <img src="pictures/gunbatarApp.png" alt="Gunbatar Shapagy APP" />
               </a>
               <div className="info">
@@ -639,7 +634,7 @@ function App() {
               <div className="external-links">
                 <div className="LiveDemoBtn">
                   <a href="https://smiletech.dev/app/JetFurniture.apk" target="_blank" className="contactBtn" style={{ padding: '0.2rem 0.6rem', height: 'auto', fontSize: '0.8rem', color: '#fff', textDecoration: 'none' }}>
-                    Live Demo
+                    Download Demo
                   </a>
                 </div>
                 <div className="GitHubIcon">
@@ -667,7 +662,7 @@ function App() {
               <div className="external-links">
                 <div className="LiveDemoBtn">
                   <a href="https://smiletech.dev/app/JetChat.apk" target="_blank" className="contactBtn" style={{ padding: '0.2rem 0.6rem', height: 'auto', fontSize: '0.8rem', color: '#fff', textDecoration: 'none' }}>
-                    Live Demo
+                    Download Demo
                   </a>
                 </div>
                 <div className="GitHubIcon">
