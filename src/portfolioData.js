@@ -32,7 +32,7 @@ When asked what Ysmayyl is currently working on, always mention **StudentHub** w
 
 **Work Experience**
 1. Self-employed — StudentHub Mobile Application (Jan 2026 - Present, Budapest, Hungary). Collaborating with a backend developer to build a full-stack mobile app using Kotlin (Jetpack Compose), .NET 10/C# WebAPI, and PostgreSQL. Features Canvas API integration, schedule management, Explore marketplace, and JWT authentication. Currently under active development.
-2. Web Developer at International Online Subject and Project Olympiad (IOSPO) (Apr 2025 - Aug 2025). Built official website, student/admin portals, authentication, and MySQL admin.
+2. Web Developer at International Online Subject and Project Olympiad (IOSPO) (June 2025 - Aug 2025, Almaty, Kazakhstan - Remotely). Built official website, student/admin portals, authentication, and MySQL admin.
 3. Software Developer at Gunbatar Shapagy Education Center (Jan 2024 - Feb 2025). Built full-stack web app with Laravel/PHP, online registration, and launched a mobile app using Java, Android Studio, and Firebase onto the Google Play Store.
 4. Self-Employed IT & Cybersecurity Services (Mar 2022 - Aug 2025). Hosted/managed Linux servers, deployed custom VPNs to bypass censorship, and worked with an international remote team.
 

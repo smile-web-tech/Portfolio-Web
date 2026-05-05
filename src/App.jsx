@@ -421,12 +421,12 @@ function App() {
                 <img src="pictures/iospoLogo.png" alt="IOSPO" className="companyLogo" style={{ height: '4rem' }} />
                 <div className="company-info">
                   <h3 className="workCompany"> International Online Subject and Project Olympiad (IOSPO)</h3>
-                  <span className="workLocation">Balkanabat, Turkmenistan</span>
+                  <span className="workLocation">Almaty, Kazakhstan (Remotely)</span>
                 </div>
               </div>
               <div className="role">
                 <h4 className="workTitle">Web Developer</h4>
-                <span className="workDate">Apr. 2025 - Aug. 2025</span>
+                <span className="workDate">June 2025 - Aug. 2025</span>
                 <div className="project">
                   <a href="https://iospo.org" target="_blank" className="projectLink"><h4 className="workTitle">IOSPO Student & Admin Portal Website</h4></a>
                   <ul className="workResponsibilities">
