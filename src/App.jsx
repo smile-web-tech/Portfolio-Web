@@ -383,6 +383,7 @@ function App() {
       </section>
 
       <section id="experience" className="section experience">
+        <SectionBackground variant="left" showOrbs />
         <div className="container projectTitle">
           <h2>Work Experience</h2>
           <div className="workGroup">
@@ -500,6 +501,7 @@ function App() {
       </section>
 
       <section id="projects" className="section projects">
+        <SectionBackground variant="right" showOrbs />
         <div className="container projectTitle">
           <h2>PROJECTS</h2>
           <div className="project-cards">
@@ -583,8 +585,6 @@ function App() {
                     Visit Site
                   </a>
                 </div>
-                <div className="GitHubIcon">
-                  <a href="https://github.com/smile-web-tech/iospo" target="_blank"><img src="icons/githubIcon.svg" alt="GitHub" style={{ height: '30px', width: '30px' }} /></a> </div>
               </div>
               <a href="https://iospo.org" target="_blank">
                 <img src="pictures/iospo.png" alt="IOSPO" />
