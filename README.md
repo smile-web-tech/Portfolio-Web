@@ -27,7 +27,7 @@ The site logs each visit to your own database (no third-party tracker; the old `
 ## Deploy on Vercel
 
 1. **Database**: Vercel dashboard → Storage → add **Neon Postgres** and connect it to the project. This sets `DATABASE_URL` (pooled) and `DATABASE_URL_UNPOOLED` (used for migrations).
-2. **File storage**: Storage → add a **Blob** store and connect it. This sets `BLOB_READ_WRITE_TOKEN`.
+2. **File storage**: Storage → add a **Public** **Blob** store and connect it with an empty prefix. This sets `BLOB_READ_WRITE_TOKEN`. (Without it the public site still works; uploads answer 503.)
 3. **Encryption key**: add env var `APP_ENCRYPTION_KEY` = output of `openssl rand -base64 32` (encrypts 2FA secrets at rest).
 4. Import the repo with the project root at the repo root. `vercel.json` sets the install/build commands. Production deploys run `prisma migrate deploy`; preview deploys only generate the client, so scope the database env vars to Production (or use a Neon branch) so previews never share production data.
 5. **Seed the current content and create your admin** (once, from your machine, with the production values from Vercel → Settings → Environment Variables):

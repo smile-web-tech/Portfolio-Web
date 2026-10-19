@@ -83,7 +83,9 @@ export function requireEncryptionKey() {
   return config.encryptionKey;
 }
 
+// Missing upload/2FA settings must not take the public site down: the read-only API doesn't need
+// them. Uploads answer 503 and 2FA errors until they are configured; this logs it loudly.
 export function assertProductionReady() {
-  requireEncryptionKey();
-  if (isProd && !config.storage.blobToken) invalid('BLOB_READ_WRITE_TOKEN is required in production (Vercel Blob)');
+  if (!config.encryptionKey) console.error('WARNING: APP_ENCRYPTION_KEY is not set; two-factor authentication is unavailable.');
+  if (isProd && !config.storage.blobToken) console.error('WARNING: BLOB_READ_WRITE_TOKEN is not set; file uploads are unavailable.');
 }

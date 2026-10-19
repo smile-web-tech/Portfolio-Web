@@ -1,6 +1,7 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { config } from '../config.js';
+import { HttpError } from '../middleware/errors.js';
 
 // Production: Vercel Blob (functions have no persistent disk).
 // Local dev without a Blob token: ./uploads, served at /uploads. Refused in production.
@@ -20,7 +21,7 @@ export async function saveFile(filename, buffer, contentType) {
     });
     return blob.url;
   }
-  if (config.isProd) throw new Error('File storage is not configured (BLOB_READ_WRITE_TOKEN)');
+  if (config.isProd) throw new HttpError(503, 'File uploads are not configured on the server yet');
   await fs.mkdir(config.storage.localDir, { recursive: true });
   await fs.writeFile(path.join(config.storage.localDir, filename), buffer, { flag: 'wx', mode: 0o644 });
   return `/uploads/${filename}`;
