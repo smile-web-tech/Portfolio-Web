@@ -1,16 +1,13 @@
 import { PrismaClient } from '@prisma/client';
 import pg from 'pg';
 import { PrismaPg } from '@prisma/adapter-pg';
+import { config } from './config.js';
 
-const connectionString = process.env.DATABASE_URL || 'postgresql://admin:adminpassword@localhost:5432/portfolio_cms?schema=public';
+const pool = new pg.Pool({
+  connectionString: config.databaseUrl,
+  max: config.dbPoolMax,
+  idleTimeoutMillis: 10_000,
+  connectionTimeoutMillis: 10_000,
+});
 
-// Pre-flight check cache so we don't init multiple pools
-let prismaClient;
-
-if (!prismaClient) {
-  const pool = new pg.Pool({ connectionString });
-  const adapter = new PrismaPg(pool);
-  prismaClient = new PrismaClient({ adapter });
-}
-
-export const prisma = prismaClient;
+export const prisma = new PrismaClient({ adapter: new PrismaPg(pool) });

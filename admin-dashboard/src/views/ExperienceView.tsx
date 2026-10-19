@@ -1,122 +1,94 @@
-import React, { useState } from 'react';
-import { useApi } from '../hooks/useApi';
-import { Plus, Trash2, Edit } from 'lucide-react';
-import { Modal } from '../components/Modal';
+import { Briefcase } from 'lucide-react'
+import type { Experience, ExperienceDetail } from '../lib/types'
+import { ResourceManager } from '../components/ResourceManager'
+import { Field, Input, Switch } from '../components/ui'
+import { ImageField } from '../components/ImageField'
+import { DetailsEditor } from '../components/ListEditors'
+import { formatRange, toInputDate } from '../lib/format'
+
+interface Draft {
+  company: string
+  role: string
+  location: string
+  logoUrl: string | null
+  startDate: string
+  endDate: string
+  details: ExperienceDetail[]
+  showProgress: boolean
+  isPublished: boolean
+}
 
 export function ExperienceView() {
-  const { data: exp, loading, error, mutate } = useApi<any[]>('/experience');
-  
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingId, setEditingId] = useState<string | null>(null);
-  const [formData, setFormData] = useState({
-    company: '', role: '', startDate: '', endDate: '', description: ''
-  });
-
-  if (loading && !exp) return <div className="text-muted-foreground p-8">Loading experience...</div>;
-  if (error && !exp) return <div className="text-destructive p-8">Error: {error}</div>;
-
-  const openForm = (item?: any) => {
-    if (item) {
-      setEditingId(item.id);
-      setFormData({
-        company: item.company || '',
-        role: item.role || '',
-        startDate: item.startDate ? new Date(item.startDate).toISOString().split('T')[0] : '',
-        endDate: item.endDate ? new Date(item.endDate).toISOString().split('T')[0] : '',
-        description: item.description || ''
-      });
-    } else {
-      setEditingId(null);
-      setFormData({ company: '', role: '', startDate: '', endDate: '', description: '' });
-    }
-    setIsModalOpen(true);
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const payload = {
-      ...formData,
-      endDate: formData.endDate ? formData.endDate : null
-    };
-    try {
-      if (editingId) await mutate('PUT', payload, `/${editingId}`);
-      else await mutate('POST', payload);
-      setIsModalOpen(false);
-    } catch (err: any) { alert(err.message || 'Validation Failed'); }
-  };
-
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h2 className="text-lg font-semibold">Experience</h2>
-        <button onClick={() => openForm()} className="flex items-center gap-2 bg-primary text-primary-foreground px-4 py-2 rounded-md hover:opacity-90 transition-opacity">
-          <Plus size={16} /> Add Experience
-        </button>
-      </div>
-
-      <div className="rounded-md border border-border bg-card overflow-hidden shadow-sm">
-        <table className="w-full text-sm text-left">
-          <thead className="bg-muted/50 text-muted-foreground border-b border-border">
-            <tr>
-              <th className="px-4 py-3 font-medium">Role</th>
-              <th className="px-4 py-3 font-medium">Company</th>
-              <th className="px-4 py-3 font-medium">Dates</th>
-              <th className="px-4 py-3 font-medium flex justify-end">Actions</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-border">
-            {exp?.length === 0 && (
-              <tr><td colSpan={4} className="px-4 py-8 text-center text-muted-foreground">No experience found. Add one above.</td></tr>
-            )}
-            {exp?.map((item) => (
-              <tr key={item.id} className="hover:bg-muted/30 transition-colors">
-                <td className="px-4 py-3 font-medium text-foreground">{item.role}</td>
-                <td className="px-4 py-3">{item.company}</td>
-                <td className="px-4 py-3 text-muted-foreground">
-                  {new Date(item.startDate).getFullYear()} - {item.endDate ? new Date(item.endDate).getFullYear() : 'Present'}
-                </td>
-                <td className="px-4 py-3 flex justify-end gap-2 text-muted-foreground">
-                  <button onClick={() => openForm(item)} className="p-1.5 hover:text-primary hover:bg-muted rounded-md transition-colors"><Edit size={16} /></button>
-                  <button onClick={() => { if(confirm('Are you sure?')) mutate('DELETE', null, `/${item.id}`) }} className="p-1.5 hover:text-destructive hover:bg-destructive/10 rounded-md transition-colors"><Trash2 size={16} /></button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-
-      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title={editingId ? "Edit Experience" : "Add Experience"}>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-1">
-              <label className="text-sm font-medium">Company</label>
-              <input required value={formData.company} onChange={e => setFormData({...formData, company: e.target.value})} className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring" />
-            </div>
-            <div className="space-y-1">
-              <label className="text-sm font-medium">Role / Title</label>
-              <input required value={formData.role} onChange={e => setFormData({...formData, role: e.target.value})} className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring" />
+    <ResourceManager<Experience, Draft>
+      path="/admin/experience"
+      title="Work Experience"
+      description="Roles shown in the Work Experience section. Leave the end date empty for a current role."
+      singular="Role"
+      wide
+      blank={() => ({ company: '', role: '', location: '', logoUrl: null, startDate: '', endDate: '', details: [{ title: null, url: null, bullets: [''] }], showProgress: false, isPublished: true })}
+      toDraft={(e) => ({
+        company: e.company,
+        role: e.role,
+        location: e.location ?? '',
+        logoUrl: e.logoUrl,
+        startDate: toInputDate(e.startDate),
+        endDate: toInputDate(e.endDate),
+        details: e.details,
+        showProgress: e.showProgress,
+        isPublished: e.isPublished,
+      })}
+      toPayload={(d) => ({
+        ...d,
+        location: d.location.trim() || null,
+        endDate: d.endDate || null,
+        details: d.details
+          .map((b) => ({ title: b.title?.trim() || null, url: b.url?.trim() || null, bullets: b.bullets.map((x) => x.trim()).filter(Boolean) }))
+          .filter((b) => b.title || b.url || b.bullets.length > 0),
+      })}
+      itemLabel={(e) => `${e.role} at ${e.company}`}
+      renderRow={(e) => (
+        <div className="flex items-center gap-3">
+          <div className="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-md border border-border bg-bg">
+            {e.logoUrl ? <img src={e.logoUrl} alt="" loading="lazy" className="h-full w-full object-contain" /> : <Briefcase size={18} className="text-muted/50" />}
+          </div>
+          <div className="min-w-0">
+            <p className="truncate font-medium">{e.company}</p>
+            <p className="truncate text-xs text-muted">
+              {e.role} · {formatRange(e.startDate, e.endDate)}
+            </p>
+          </div>
+        </div>
+      )}
+      renderForm={({ draft, patch, error }) => (
+        <>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <Field label="Company / organization" required error={error?.fieldError('company')}>
+              {(id) => <Input id={id} required maxLength={160} value={draft.company} onChange={(e) => patch({ company: e.target.value })} />}
+            </Field>
+            <Field label="Role" required error={error?.fieldError('role')}>
+              {(id) => <Input id={id} required maxLength={160} value={draft.role} onChange={(e) => patch({ role: e.target.value })} />}
+            </Field>
+            <Field label="Location" error={error?.fieldError('location')}>
+              {(id) => <Input id={id} maxLength={120} value={draft.location} onChange={(e) => patch({ location: e.target.value })} placeholder="City, Country" />}
+            </Field>
+            <div className="grid grid-cols-2 gap-3">
+              <Field label="Start" required error={error?.fieldError('startDate')}>
+                {(id) => <Input id={id} type="date" required value={draft.startDate} onChange={(e) => patch({ startDate: e.target.value })} />}
+              </Field>
+              <Field label="End" hint="Empty = present" error={error?.fieldError('endDate')}>
+                {(id) => <Input id={id} type="date" value={draft.endDate} onChange={(e) => patch({ endDate: e.target.value })} />}
+              </Field>
             </div>
           </div>
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-1">
-              <label className="text-sm font-medium">Start Date</label>
-              <input type="date" required value={formData.startDate} onChange={e => setFormData({...formData, startDate: e.target.value})} className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring block [color-scheme:dark]" />
-            </div>
-            <div className="space-y-1">
-              <label className="text-sm font-medium">End Date (Leave empty for Present)</label>
-              <input type="date" value={formData.endDate} onChange={e => setFormData({...formData, endDate: e.target.value})} className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring block [color-scheme:dark]" />
-            </div>
-          </div>
-          <div className="space-y-1">
-            <label className="text-sm font-medium">Description</label>
-            <textarea required value={formData.description} onChange={e => setFormData({...formData, description: e.target.value})} className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring" />
-          </div>
-          <div className="pt-4 flex justify-end gap-2">
-            <button type="button" onClick={() => setIsModalOpen(false)} className="px-4 py-2 rounded-md hover:bg-muted text-muted-foreground transition-colors">Cancel</button>
-            <button type="submit" className="bg-primary text-primary-foreground px-4 py-2 rounded-md hover:opacity-90 transition-opacity">Save Experience</button>
-          </div>
-        </form>
-      </Modal>
-    </div>
-  );
+          <ImageField label="Company logo" value={draft.logoUrl} onChange={(logoUrl) => patch({ logoUrl })} error={error?.fieldError('logoUrl')} />
+          <Field label="What you did" hint="Optional titled blocks, each with bullet points. Use **double asterisks** to highlight words." error={error?.issues.find((i) => i.path.startsWith('details'))?.message}>
+            {() => <DetailsEditor value={draft.details} onChange={(details) => patch({ details })} />}
+          </Field>
+          <Switch checked={draft.showProgress} onChange={(showProgress) => patch({ showProgress })} label="Show “in progress” bar" description="Adds the development-progress indicator under this role." />
+          <Switch checked={draft.isPublished} onChange={(isPublished) => patch({ isPublished })} label="Published" />
+        </>
+      )}
+    />
+  )
 }

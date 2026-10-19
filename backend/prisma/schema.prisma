@@ -7,58 +7,77 @@ datasource db {
 }
 
 model GeneralSettings {
-  id               Int     @id @default(1)
-  name             String
-  jobTitle         String
-  bio              String?
-  profilePicUrl    String?
-  resumeUrl        String?
-  githubUrl        String?
-  linkedinUrl      String?
-  twitterUrl       String?
-  email            String?
+  id                 Int     @id @default(1)
+  name               String
+  jobTitle           String
+  bio                String?
+  email              String?
+  phone              String?
+  profilePicUrl      String? // Hero foreground photo
+  heroBackgroundUrl  String? // Hero background layer
+  aboutImageUrl      String?
+  resumeUrl          String?
+  githubUrl          String?
+  linkedinUrl        String?
+  twitterUrl         String?
+  footerCredit       String?
 }
 
 model Project {
-  id             String   @id @default(uuid())
-  title          String
-  description    String
-  techStack      String[] // Array of strings for tags
-  liveDemoUrl    String?
-  githubRepoUrl  String?
-  thumbnailUrl   String?
-  isFeatured     Boolean  @default(false)
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  id           String   @id @default(uuid())
+  title        String
+  description  String
+  techStack    String[]
+  thumbnailUrl String?
+  // [{ label: string, url: string, kind: "button" | "highlight" | "github" }]
+  links        Json     @default("[]")
+  isPublished  Boolean  @default(true)
+  sortOrder    Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 }
 
 model Experience {
-  id          String   @id @default(uuid())
-  company     String
-  role        String
-  startDate   DateTime
-  endDate     DateTime? // Null means "Present"
-  description String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id           String    @id @default(uuid())
+  company      String
+  role         String
+  location     String?
+  logoUrl      String?
+  startDate    DateTime
+  endDate      DateTime? // Null means "Present"
+  // [{ title?: string, url?: string, bullets: string[] }], bullets support **bold**
+  details      Json      @default("[]")
+  showProgress Boolean   @default(false)
+  isPublished  Boolean   @default(true)
+  sortOrder    Int       @default(0)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
 }
 
 model Education {
-  id          String   @id @default(uuid())
+  id          String    @id @default(uuid())
   institution String
-  degree      String
+  degree      String? // Shown under the institution when set
+  location    String?
+  logoUrl     String?
   startDate   DateTime
-  endDate     DateTime? // Null means until present or dropping out
+  endDate     DateTime? // Null means until present
   gpa         String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  bullets     String[]
+  isPublished Boolean   @default(true)
+  sortOrder   Int       @default(0)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 }
 
 model Skill {
   id          String   @id @default(uuid())
-  category    String   // e.g., "Frontend", "Backend"
+  category    String
   name        String
   proficiency String?
+  iconUrl     String?
+  isPublished Boolean  @default(true)
+  sortOrder   Int      @default(0)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
@@ -66,15 +85,92 @@ model Skill {
 model CustomSection {
   id        String   @id @default(uuid())
   title     String
-  content   String   // Markdown body
+  content   String // Markdown body
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
+model Media {
+  id           String   @id @default(uuid())
+  url          String   @unique // Vercel Blob URL (or /uploads/... in local dev)
+  originalName String
+  mime         String
+  size         Int
+  width        Int?
+  height       Int?
+  createdAt    DateTime @default(now())
+}
+
 model User {
+  id            String    @id @default(uuid())
+  email         String    @unique
+  password      String // argon2id hash
+  failedLogins  Int       @default(0)
+  lockedUntil   DateTime?
+  lastLoginAt   DateTime?
+  totpSecretEnc String? // AES-256-GCM encrypted base32 secret
+  totpEnabled   Boolean   @default(false)
+  totpLastStep  Int? // Last accepted TOTP time step, blocks replay
+  recoveryCodes String[] // SHA-256 hashes of unused one-time codes
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  sessions      Session[]
+  auditLogs     AuditLog[]
+}
+
+model Session {
+  id         String   @id @default(uuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tokenHash  String   @unique // SHA-256 of the cookie value; the raw token is never stored
+  csrfToken  String
+  ip         String?
+  userAgent  String?
+  createdAt  DateTime @default(now())
+  lastSeenAt DateTime @default(now())
+  expiresAt  DateTime
+
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+model AuditLog {
   id        String   @id @default(uuid())
-  email     String   @unique
-  password  String   // Hashed
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  action    String // e.g. "login.success", "project.update"
+  entity    String?
+  entityId  String?
+  detail    String?
+  ip        String?
+  userAgent String?
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+
+  @@index([createdAt])
+  @@index([action, ip, createdAt])
+}
+
+// One row per visit (a browser session on the site). Repeat loads within 30 minutes from the
+// same IP + browser bump pageViews instead of creating a new row.
+model Visit {
+  id           String   @id @default(uuid())
+  ip           String
+  country      String? // ISO 3166-1 alpha-2, from the hosting platform's edge headers
+  region       String?
+  city         String?
+  deviceType   String // desktop | mobile | tablet | bot | unknown
+  browser      String?
+  os           String?
+  userAgent    String?
+  referrerHost String?
+  path         String?
+  language     String?
+  isBot        Boolean  @default(false)
+  pageViews    Int      @default(1)
+  createdAt    DateTime @default(now())
+  lastSeenAt   DateTime @default(now())
+
+  @@index([createdAt])
+  @@index([ip, createdAt])
+  @@index([ip, userAgent, lastSeenAt])
 }

@@ -8,14 +8,17 @@ services:
       - /app/node_modules
     environment:
       - CHOKIDAR_USEPOLLING=true # Helps with Hot Module Replacement in Docker
+      # Backend runs on the host; the browser calls it directly (allowed by PUBLIC_ORIGINS).
+      - VITE_API_URL=http://localhost:5000
   db:
     image: postgres:15
     environment:
-      POSTGRES_USER: admin
-      POSTGRES_PASSWORD: adminpassword
-      POSTGRES_DB: portfolio_cms
+      POSTGRES_USER: ${POSTGRES_USER:-portfolio}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
+      POSTGRES_DB: ${POSTGRES_DB:-portfolio_cms}
     ports:
-      - "5432:5432"
+      # Loopback only: the database must never be reachable from the network.
+      - "127.0.0.1:5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
 

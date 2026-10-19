@@ -5,7 +5,14 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "node --watch index.js",
+    "start": "node index.js",
+    "test": "node --test \"test/*.test.js\"",
+    "create-admin": "node scripts/create-admin.js",
+    "db:migrate": "prisma migrate deploy",
+    "db:seed": "prisma db seed",
+    "db:generate": "prisma generate",
+    "vercel-build": "node scripts/vercel-build.js"
   },
   "keywords": [],
   "author": "",
@@ -13,18 +20,25 @@
   "dependencies": {
     "@prisma/adapter-pg": "^7.7.0",
     "@prisma/client": "^7.7.0",
-    "bcrypt": "^6.0.0",
+    "@vercel/blob": "^2.8.2",
+    "bowser": "^2.14.1",
+    "cookie-parser": "^1.4.7",
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
+    "express-rate-limit": "^8.7.1",
+    "file-type": "^22.2.0",
+    "helmet": "^8.3.0",
+    "isbot": "^5.2.2",
+    "multer": "^2.4.0",
+    "otpauth": "^9.5.2",
     "pg": "^8.20.0",
+    "qrcode": "^1.5.4",
+    "sharp": "^0.35.5",
     "zod": "^4.3.6"
   },
   "devDependencies": {
     "nodemon": "^3.1.14",
     "prisma": "^7.7.0"
-  },
-  "prisma": {
-    "seed": "node prisma/seed.js"
   }
 }

@@ -1,121 +1,93 @@
-import React, { useState } from 'react';
-import { useApi } from '../hooks/useApi';
-import { Plus, Trash2, Edit } from 'lucide-react';
-import { Modal } from '../components/Modal';
+import { GraduationCap } from 'lucide-react'
+import type { Education } from '../lib/types'
+import { ResourceManager } from '../components/ResourceManager'
+import { Field, Input, Switch } from '../components/ui'
+import { ImageField } from '../components/ImageField'
+import { StringListEditor } from '../components/ListEditors'
+import { formatRange, toInputDate } from '../lib/format'
+
+interface Draft {
+  institution: string
+  degree: string
+  location: string
+  logoUrl: string | null
+  startDate: string
+  endDate: string
+  gpa: string
+  bullets: string[]
+  isPublished: boolean
+}
 
 export function EducationView() {
-  const { data: edu, loading, error, mutate } = useApi<any[]>('/education');
-  
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingId, setEditingId] = useState<string | null>(null);
-  const [formData, setFormData] = useState({
-    institution: '', degree: '', startDate: '', endDate: '', gpa: ''
-  });
-
-  if (loading && !edu) return <div className="text-muted-foreground p-8">Loading education...</div>;
-  if (error && !edu) return <div className="text-destructive p-8">Error: {error}</div>;
-
-  const openForm = (item?: any) => {
-    if (item) {
-      setEditingId(item.id);
-      setFormData({
-        institution: item.institution || '',
-        degree: item.degree || '',
-        startDate: item.startDate ? new Date(item.startDate).toISOString().split('T')[0] : '',
-        endDate: item.endDate ? new Date(item.endDate).toISOString().split('T')[0] : '',
-        gpa: item.gpa || ''
-      });
-    } else {
-      setEditingId(null);
-      setFormData({ institution: '', degree: '', startDate: '', endDate: '', gpa: '' });
-    }
-    setIsModalOpen(true);
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const payload = {
-      ...formData,
-      endDate: formData.endDate ? formData.endDate : null,
-      gpa: formData.gpa || null
-    };
-    try {
-      if (editingId) await mutate('PUT', payload, `/${editingId}`);
-      else await mutate('POST', payload);
-      setIsModalOpen(false);
-    } catch (err: any) { alert(err.message || 'Validation Failed'); }
-  };
-
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h2 className="text-lg font-semibold">Education</h2>
-        <button onClick={() => openForm()} className="flex items-center gap-2 bg-primary text-primary-foreground px-4 py-2 rounded-md hover:opacity-90 transition-opacity">
-          <Plus size={16} /> Add Education
-        </button>
-      </div>
-
-      <div className="rounded-md border border-border bg-card overflow-hidden shadow-sm">
-        <table className="w-full text-sm text-left">
-          <thead className="bg-muted/50 text-muted-foreground border-b border-border">
-            <tr>
-              <th className="px-4 py-3 font-medium">Degree</th>
-              <th className="px-4 py-3 font-medium">Institution</th>
-              <th className="px-4 py-3 font-medium">Dates</th>
-              <th className="px-4 py-3 font-medium flex justify-end">Actions</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-border">
-            {edu?.length === 0 && (
-              <tr><td colSpan={4} className="px-4 py-8 text-center text-muted-foreground">No education listed.</td></tr>
-            )}
-            {edu?.map((item) => (
-              <tr key={item.id} className="hover:bg-muted/30 transition-colors">
-                <td className="px-4 py-3 font-medium text-foreground">{item.degree}</td>
-                <td className="px-4 py-3">{item.institution}</td>
-                <td className="px-4 py-3 text-muted-foreground">
-                  {new Date(item.startDate).getFullYear()} - {item.endDate ? new Date(item.endDate).getFullYear() : 'Present'}
-                </td>
-                <td className="px-4 py-3 flex justify-end gap-2 text-muted-foreground">
-                  <button onClick={() => openForm(item)} className="p-1.5 hover:text-primary hover:bg-muted rounded-md transition-colors"><Edit size={16} /></button>
-                  <button onClick={() => { if(confirm('Are you sure?')) mutate('DELETE', null, `/${item.id}`) }} className="p-1.5 hover:text-destructive hover:bg-destructive/10 rounded-md transition-colors"><Trash2 size={16} /></button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-
-      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title={editingId ? "Edit Education" : "Add Education"}>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="space-y-1">
-            <label className="text-sm font-medium">Institution</label>
-            <input required value={formData.institution} onChange={e => setFormData({...formData, institution: e.target.value})} className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring" />
+    <ResourceManager<Education, Draft>
+      path="/admin/education"
+      title="Education"
+      description="Schools, courses and certifications. Leave the end date empty if it’s ongoing."
+      singular="Education"
+      blank={() => ({ institution: '', degree: '', location: '', logoUrl: null, startDate: '', endDate: '', gpa: '', bullets: [], isPublished: true })}
+      toDraft={(e) => ({
+        institution: e.institution,
+        degree: e.degree ?? '',
+        location: e.location ?? '',
+        logoUrl: e.logoUrl,
+        startDate: toInputDate(e.startDate),
+        endDate: toInputDate(e.endDate),
+        gpa: e.gpa ?? '',
+        bullets: e.bullets,
+        isPublished: e.isPublished,
+      })}
+      toPayload={(d) => ({
+        ...d,
+        degree: d.degree.trim() || null,
+        location: d.location.trim() || null,
+        gpa: d.gpa.trim() || null,
+        endDate: d.endDate || null,
+        bullets: d.bullets.map((b) => b.trim()).filter(Boolean),
+      })}
+      itemLabel={(e) => e.institution}
+      renderRow={(e) => (
+        <div className="flex items-center gap-3">
+          <div className="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-md border border-border bg-bg">
+            {e.logoUrl ? <img src={e.logoUrl} alt="" loading="lazy" className="h-full w-full object-contain" /> : <GraduationCap size={18} className="text-muted/50" />}
           </div>
-          <div className="space-y-1">
-            <label className="text-sm font-medium">Degree</label>
-            <input required value={formData.degree} onChange={e => setFormData({...formData, degree: e.target.value})} className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring" />
+          <div className="min-w-0">
+            <p className="truncate font-medium">{e.institution}</p>
+            <p className="truncate text-xs text-muted">
+              {[e.degree, formatRange(e.startDate, e.endDate)].filter(Boolean).join(' · ')}
+            </p>
           </div>
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-1">
-              <label className="text-sm font-medium">Start Date</label>
-              <input type="date" required value={formData.startDate} onChange={e => setFormData({...formData, startDate: e.target.value})} className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring block [color-scheme:dark]" />
-            </div>
-            <div className="space-y-1">
-              <label className="text-sm font-medium">End Date</label>
-              <input type="date" value={formData.endDate} onChange={e => setFormData({...formData, endDate: e.target.value})} className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring block [color-scheme:dark]" />
-            </div>
+        </div>
+      )}
+      renderForm={({ draft, patch, error }) => (
+        <>
+          <Field label="Institution" required error={error?.fieldError('institution')}>
+            {(id) => <Input id={id} required maxLength={160} value={draft.institution} onChange={(e) => patch({ institution: e.target.value })} />}
+          </Field>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <Field label="Degree / program" error={error?.fieldError('degree')}>
+              {(id) => <Input id={id} maxLength={200} value={draft.degree} onChange={(e) => patch({ degree: e.target.value })} />}
+            </Field>
+            <Field label="Location" error={error?.fieldError('location')}>
+              {(id) => <Input id={id} maxLength={120} value={draft.location} onChange={(e) => patch({ location: e.target.value })} />}
+            </Field>
+            <Field label="Start" required error={error?.fieldError('startDate')}>
+              {(id) => <Input id={id} type="date" required value={draft.startDate} onChange={(e) => patch({ startDate: e.target.value })} />}
+            </Field>
+            <Field label="End" hint="Empty = present" error={error?.fieldError('endDate')}>
+              {(id) => <Input id={id} type="date" value={draft.endDate} onChange={(e) => patch({ endDate: e.target.value })} />}
+            </Field>
+            <Field label="GPA / grade" error={error?.fieldError('gpa')}>
+              {(id) => <Input id={id} maxLength={20} value={draft.gpa} onChange={(e) => patch({ gpa: e.target.value })} />}
+            </Field>
           </div>
-          <div className="space-y-1">
-            <label className="text-sm font-medium">GPA (Optional)</label>
-            <input value={formData.gpa} onChange={e => setFormData({...formData, gpa: e.target.value})} className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring" />
-          </div>
-          <div className="pt-4 flex justify-end gap-2">
-            <button type="button" onClick={() => setIsModalOpen(false)} className="px-4 py-2 rounded-md hover:bg-muted text-muted-foreground transition-colors">Cancel</button>
-            <button type="submit" className="bg-primary text-primary-foreground px-4 py-2 rounded-md hover:opacity-90 transition-opacity">Save Education</button>
-          </div>
-        </form>
-      </Modal>
-    </div>
-  );
+          <ImageField label="Logo" value={draft.logoUrl} onChange={(logoUrl) => patch({ logoUrl })} error={error?.fieldError('logoUrl')} />
+          <Field label="Details" hint="Short lines shown under the institution." error={error?.issues.find((i) => i.path.startsWith('bullets'))?.message}>
+            {() => <StringListEditor value={draft.bullets} onChange={(bullets) => patch({ bullets })} rows={1} addLabel="Add line" />}
+          </Field>
+          <Switch checked={draft.isPublished} onChange={(isPublished) => patch({ isPublished })} label="Published" />
+        </>
+      )}
+    />
+  )
 }

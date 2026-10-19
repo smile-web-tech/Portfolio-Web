@@ -1,102 +1,75 @@
-import React, { useState } from 'react';
-import { useApi } from '../hooks/useApi';
-import { Plus, Trash2, Edit } from 'lucide-react';
-import { Modal } from '../components/Modal';
+import { Code2 } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import type { Skill } from '../lib/types'
+import { api } from '../lib/api'
+import { ResourceManager } from '../components/ResourceManager'
+import { Field, Input, Switch } from '../components/ui'
+import { ImageField } from '../components/ImageField'
+
+interface Draft {
+  category: string
+  name: string
+  proficiency: string
+  iconUrl: string | null
+  isPublished: boolean
+}
 
 export function SkillsView() {
-  const { data: skills, loading, error, mutate } = useApi<any[]>('/skills');
-  
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingId, setEditingId] = useState<string | null>(null);
-  const [formData, setFormData] = useState({ name: '', category: '', proficiency: '' });
-
-  if (loading && !skills) return <div className="text-muted-foreground p-8">Loading skills...</div>;
-  if (error && !skills) return <div className="text-destructive p-8">Error: {error}</div>;
-
-  const openForm = (item?: any) => {
-    if (item) {
-      setEditingId(item.id);
-      setFormData({ name: item.name || '', category: item.category || '', proficiency: item.proficiency || '' });
-    } else {
-      setEditingId(null);
-      setFormData({ name: '', category: '', proficiency: '' });
-    }
-    setIsModalOpen(true);
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const payload = {
-      ...formData,
-      proficiency: formData.proficiency || null
-    };
-    try {
-      if (editingId) await mutate('PUT', payload, `/${editingId}`);
-      else await mutate('POST', payload);
-      setIsModalOpen(false);
-    } catch (err: any) { alert(err.message || 'Validation Failed'); }
-  };
+  // Existing categories feed the autocomplete so new skills land in the right group.
+  const [categories, setCategories] = useState<string[]>([])
+  useEffect(() => {
+    api
+      .get<Skill[]>('/admin/skills')
+      .then((skills) => setCategories([...new Set(skills.map((s) => s.category))]))
+      .catch(() => {})
+  }, [])
 
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h2 className="text-lg font-semibold">Skills Database</h2>
-        <button onClick={() => openForm()} className="flex items-center gap-2 bg-primary text-primary-foreground px-4 py-2 rounded-md hover:opacity-90 transition-opacity">
-          <Plus size={16} /> Add Skill
-        </button>
-      </div>
-
-      <div className="rounded-md border border-border bg-card overflow-hidden shadow-sm">
-        <table className="w-full text-sm text-left">
-          <thead className="bg-muted/50 text-muted-foreground border-b border-border">
-            <tr>
-              <th className="px-4 py-3 font-medium">Name</th>
-              <th className="px-4 py-3 font-medium">Category</th>
-              <th className="px-4 py-3 font-medium">Proficiency</th>
-              <th className="px-4 py-3 font-medium flex justify-end">Actions</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-border">
-            {skills?.length === 0 && (
-              <tr><td colSpan={4} className="px-4 py-8 text-center text-muted-foreground">No skills defined.</td></tr>
-            )}
-            {skills?.map((item) => (
-              <tr key={item.id} className="hover:bg-muted/30 transition-colors">
-                <td className="px-4 py-3 font-medium text-foreground">{item.name}</td>
-                <td className="px-4 py-3">
-                  <span className="bg-secondary text-secondary-foreground text-xs px-2 py-1 rounded-md border border-border">{item.category}</span>
-                </td>
-                <td className="px-4 py-3 text-muted-foreground">{item.proficiency || '-'}</td>
-                <td className="px-4 py-3 flex justify-end gap-2 text-muted-foreground">
-                  <button onClick={() => openForm(item)} className="p-1.5 hover:text-primary hover:bg-muted rounded-md transition-colors"><Edit size={16} /></button>
-                  <button onClick={() => { if(confirm('Are you sure?')) mutate('DELETE', null, `/${item.id}`) }} className="p-1.5 hover:text-destructive hover:bg-destructive/10 rounded-md transition-colors"><Trash2 size={16} /></button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-
-      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title={editingId ? "Edit Skill" : "Add Skill"}>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="space-y-1">
-            <label className="text-sm font-medium">Category</label>
-            <input required placeholder="e.g. Frontend, Backend, Tools" value={formData.category} onChange={e => setFormData({...formData, category: e.target.value})} className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring" />
+    <ResourceManager<Skill, Draft>
+      path="/admin/skills"
+      title="Skills"
+      description="Grouped by category. Arrows reorder within a group; the group order follows its first skill."
+      singular="Skill"
+      groupBy={(s) => s.category}
+      blank={() => ({ category: categories[0] ?? '', name: '', proficiency: '', iconUrl: null, isPublished: true })}
+      toDraft={(s) => ({ category: s.category, name: s.name, proficiency: s.proficiency ?? '', iconUrl: s.iconUrl, isPublished: s.isPublished })}
+      toPayload={(d) => ({ ...d, proficiency: d.proficiency.trim() || null })}
+      itemLabel={(s) => s.name}
+      renderRow={(s) => (
+        <div className="flex items-center gap-3">
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-md border border-border bg-bg p-1">
+            {s.iconUrl ? <img src={s.iconUrl} alt="" loading="lazy" className="h-full w-full object-contain" /> : <Code2 size={16} className="text-muted/50" />}
           </div>
-          <div className="space-y-1">
-            <label className="text-sm font-medium">Skill Name</label>
-            <input required placeholder="e.g. React.js, PostgreSQL" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring" />
+          <p className="truncate font-medium">{s.name}</p>
+          {s.proficiency && <span className="text-xs text-muted">{s.proficiency}</span>}
+        </div>
+      )}
+      renderForm={({ draft, patch, error }) => (
+        <>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <Field label="Name" required error={error?.fieldError('name')}>
+              {(id) => <Input id={id} required maxLength={60} value={draft.name} onChange={(e) => patch({ name: e.target.value })} />}
+            </Field>
+            <Field label="Category" required hint="Pick an existing group or type a new one." error={error?.fieldError('category')}>
+              {(id) => (
+                <>
+                  <Input id={id} required maxLength={60} list={`${id}-cats`} value={draft.category} onChange={(e) => patch({ category: e.target.value })} />
+                  <datalist id={`${id}-cats`}>
+                    {categories.map((c) => (
+                      <option key={c} value={c} />
+                    ))}
+                  </datalist>
+                </>
+              )}
+            </Field>
+            <Field label="Proficiency" hint="Optional, e.g. Advanced" error={error?.fieldError('proficiency')}>
+              {(id) => <Input id={id} maxLength={40} value={draft.proficiency} onChange={(e) => patch({ proficiency: e.target.value })} />}
+            </Field>
           </div>
-          <div className="space-y-1">
-            <label className="text-sm font-medium">Proficiency (Optional)</label>
-            <input placeholder="e.g. Expert, Intermediate, 90%" value={formData.proficiency} onChange={e => setFormData({...formData, proficiency: e.target.value})} className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring" />
-          </div>
-          <div className="pt-4 flex justify-end gap-2">
-            <button type="button" onClick={() => setIsModalOpen(false)} className="px-4 py-2 rounded-md hover:bg-muted text-muted-foreground transition-colors">Cancel</button>
-            <button type="submit" className="bg-primary text-primary-foreground px-4 py-2 rounded-md hover:opacity-90 transition-opacity">Save Skill</button>
-          </div>
-        </form>
-      </Modal>
-    </div>
-  );
+          <ImageField label="Icon" value={draft.iconUrl} onChange={(iconUrl) => patch({ iconUrl })} error={error?.fieldError('iconUrl')} hint="SVGs are converted to PNG on upload." />
+          <Switch checked={draft.isPublished} onChange={(isPublished) => patch({ isPublished })} label="Published" />
+        </>
+      )}
+    />
+  )
 }
